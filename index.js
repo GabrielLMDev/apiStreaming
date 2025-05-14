@@ -3,11 +3,11 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const { getPrices } = require('./js/firebase_Functions');
 
-app.use(cors());
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(cors());
 
 app.get('/api/prices', async (req, res) => {
     const data = await getPrices();
