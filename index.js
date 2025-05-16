@@ -1,7 +1,7 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
-const { getPrices } = require('./js/firebase_Functions');
+const { getPrices, updateApp } = require('./js/firebase_Functions');
 const { searchByNumber, searchByMail } = require('./js/sheets_Functions');
 
 dotenv.config();
@@ -55,6 +55,30 @@ app.post('/api/search/mail', async (req, res) => {
         res.status(500).json({ error: 'Error del servidor' });
     }
 })
+
+app.post('/api/update', async (req, res) => {
+    const { dataApp } = req.body;
+
+    if (!dataApp || !dataApp.idProduct) {
+        return res.status(400).json({ error: 'Datos incompletos o malformados' });
+    }
+
+    try {
+        const data = await updateApp(dataApp);
+
+        if (data === true) {
+            const timestamp = new Date().toISOString();
+            console.log(`App => ${dataApp.idProduct} actualizada => ${timestamp}`);
+            res.json({ success: true });
+        } else {
+            res.status(500).json({ error: 'No se pudo actualizar' });
+        }
+    } catch (error) {
+        console.error('Error al actualizar:', error);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
 
 app.listen(PORT, () => {
     const url = process.env.RAILWAY_STATIC_URL

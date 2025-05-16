@@ -35,7 +35,7 @@ async function searchByNumber(data) {
             return filteredData;
         } else {
             console.error('Sin datos');
-            return 'Sin datos';
+            return '';
         }
     } catch (error) {
         console.error('Error al obtener los datos de Google Sheets:', error);
@@ -76,8 +76,8 @@ async function searchByMail(data) {
         if (filteredData.length > 0) {
             return filteredData;
         } else {
-            console.error('Sin registros');
-            return 'Sin registros';
+            console.error('Sin datos');
+            return '';
         }
     } catch (error) {
         console.error('Error al obtener los datos de Google Sheets:', error);
