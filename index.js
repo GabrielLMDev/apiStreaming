@@ -80,7 +80,9 @@ app.post('/api/update', async (req, res) => {
 });
 
 app.post('/api/send-data', async (req, res) => {
+    console.log('Cuerpo recibido:', req.body);
     const data = req.body; // Recibe todos los datos del frontend
+    console.log(data)
     try {
         const result = await sendToScript(data); // Envía a la función externa
         const timestamp = new Date().toISOString();

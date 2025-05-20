@@ -86,6 +86,7 @@ async function searchByMail(data) {
 }
 
 async function sendToScript(data) {
+    console.log('sendToScript => ' + data.phone);
     const response = await fetch(process.env.SCRIPT_SHEETS_URL, {
         method: 'POST',
         headers: {
