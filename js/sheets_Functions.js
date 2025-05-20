@@ -85,4 +85,27 @@ async function searchByMail(data) {
     }
 }
 
-module.exports = { searchByNumber, searchByMail };
+async function sendToScript(data) {
+    const response = await fetch(process.env.SCRIPT_SHEETS_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+
+    const text = await response.text();
+
+    try {
+        // Intenta parsear a JSON
+        const json = JSON.parse(text);
+        return json;
+    } catch (error) {
+        // Si no se puede parsear, devuelve el HTML como error
+        console.error('Respuesta inesperada del script:', text);
+        throw new Error('El script devolvió una respuesta no válida (HTML). Revisa los permisos o URL.');
+    }
+}
+
+
+module.exports = { searchByNumber, searchByMail, sendToScript };

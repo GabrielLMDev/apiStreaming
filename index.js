@@ -2,7 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
 const { getPrices, updateApp } = require('./js/firebase_Functions');
-const { searchByNumber, searchByMail } = require('./js/sheets_Functions');
+const { searchByNumber, searchByMail, sendToScript } = require('./js/sheets_Functions');
 
 dotenv.config();
 
@@ -79,6 +79,19 @@ app.post('/api/update', async (req, res) => {
     }
 });
 
+app.post('/api/send-data', async (req, res) => {
+    const data = req.body; // Recibe todos los datos del frontend
+    try {
+        const result = await sendToScript(data); // Envía a la función externa
+        const timestamp = new Date().toISOString();
+        console.log(`Datos enviados => ${data.phone} | ${timestamp}`); // Muestra algo útil del envío
+
+        res.json(result); // Devuelve la respuesta del script al frontend
+    } catch (error) {
+        console.error('Error al enviar datos al script:', error);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
 
 app.listen(PORT, () => {
     const url = process.env.RAILWAY_STATIC_URL
