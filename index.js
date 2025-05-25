@@ -95,6 +95,30 @@ app.post('/api/send-data', async (req, res) => {
     }
 });
 
+app.post('/api/update-data', async (req, res) => {
+
+    const { updateData } = req.body;
+
+    if (!updateData || !updateData.id) {
+        return res.status(400).json({ error: 'Datos incompletos o malformados' });
+    }
+
+    console.log('Cuerpo recibido:', req.body);
+
+    
+    console.log(updateData)
+    try {
+        const result = await sendToScript(updateData); // Envía a la función externa
+        const timestamp = new Date().toISOString();
+        console.log(`Datos enviados => ${updateData.phone} | ${timestamp}`); // Muestra algo útil del envío
+
+        res.json(result); // Devuelve la respuesta del script al frontend
+    } catch (error) {
+        console.error('Error al enviar datos al script:', error);
+        res.status(500).json({ error: 'Error del servidor' });
+    }
+});
+
 app.listen(PORT, () => {
     const url = process.env.RAILWAY_STATIC_URL
         ? `https://${process.env.RAILWAY_STATIC_URL}`
